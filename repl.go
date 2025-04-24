@@ -4,7 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
+	"time"
 )
 
 type cliCommand struct {
@@ -13,11 +16,42 @@ type cliCommand struct {
 	callback    func(...string) error
 }
 
+var clear map[string]func()
+
+func init() {
+	clear = make(map[string]func())
+	clear["linux"] = func() {
+		cmd := exec.Command("clear")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+	clear["windows"] = func() {
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	}
+}
+
+func callClear() {
+	value, ok := clear[runtime.GOOS]
+	if ok {
+		value()
+	} else {
+		panic("Your platform not support clear screen")
+	}
+}
+
 func repl() {
 	var param []string
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Print("notes > ")
+		callClear()
+		now := time.Now()
+		fmt.Printf(
+			`--------------------------------------------------
+		%v
+--------------------------------------------------
+notes > `, now.Format(time.DateTime))
 		scanner.Scan()
 		textBytes := scanner.Text()
 		cleanText := cleanInput(string(textBytes))
