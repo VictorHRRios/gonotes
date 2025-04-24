@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -45,7 +46,7 @@ func repl() {
 	var param []string
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		callClear()
+		//callClear()
 		now := time.Now()
 		fmt.Printf(
 			`--------------------------------------------------
@@ -70,7 +71,7 @@ notes > `, now.Format(time.DateTime))
 		}
 		err := command.callback(param...)
 		if err != nil {
-			panic(err)
+			log.Print(err)
 		}
 	}
 }
@@ -85,6 +86,11 @@ func getCommands() map[string]cliCommand {
 			name:        "exit",
 			description: "Exit the gonotes",
 			callback:    commandExit,
+		},
+		"add": {
+			name:        "add",
+			description: "Add an entry",
+			callback:    commandAdd,
 		},
 	}
 }
