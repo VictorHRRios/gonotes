@@ -61,8 +61,8 @@ notes > `, now.Format(time.DateTime))
 		}
 		firstWord := cleanText[0]
 
-		if len(cleanText) > 1 {
-			param = cleanText[0:]
+		if len(cleanText) > 0 {
+			param = cleanText[1:]
 		}
 		command, ok := getCommands()[firstWord]
 		if !ok {
@@ -77,7 +77,9 @@ notes > `, now.Format(time.DateTime))
 }
 
 func cleanInput(text string) []string {
-	return strings.Fields(strings.ToLower(text))
+	textList := strings.Fields(text)
+	textList[0] = strings.ToLower(textList[0])
+	return textList
 }
 
 func getCommands() map[string]cliCommand {
@@ -91,6 +93,11 @@ func getCommands() map[string]cliCommand {
 			name:        "add",
 			description: "Add an entry",
 			callback:    commandAdd,
+		},
+		"init": {
+			name:        "init",
+			description: "Initialize entries file",
+			callback:    commandInit,
 		},
 	}
 }

@@ -7,11 +7,15 @@ type Entries struct {
 }
 
 type Entry struct {
-	Title    string `json:"title"`
-	ToDoList []struct {
-		Item string `json:"item"`
-	} `json:"toDoList"`
+	ID        int        `json:"id"`
+	AddedDate time.Time  `json:"addedDate"`
+	Title     string     `json:"title"`
+	ToDoList  []ToDoList `json:"toDoList"`
+}
+
+type ToDoList struct {
 	AddedDate   time.Time `json:"addedDate"`
 	ClosingDate time.Time `json:"closingDate"`
+	Item        string    `json:"item"`
 	Priority    *int      `json:"priority"`
 }
